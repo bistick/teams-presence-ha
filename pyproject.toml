@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "teams-presence"
+version = "0.1.0"
+description = "Publish Microsoft Teams presence, read from local logs, to Home Assistant from the macOS menu bar."
+requires-python = ">=3.12"
+dependencies = [
+    "rumps>=0.4.0,<0.5",
+    "keyring>=25,<26",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.6",
+    "mypy>=1.11",
+]
+# Builds TeamsPresence.app from packaging/TeamsPresence.spec.
+app = [
+    "pyinstaller>=6.22,<7",
+]
+
+[project.scripts]
+teams-presence = "teams_presence.__main__:main"
+
+[tool.setuptools]
+packages = ["teams_presence"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+# Markdown code blocks in docs/ are illustrative, not source.
+extend-exclude = ["docs", "packaging/*.spec"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+# Italian UI strings use typographic characters (…, ›, —) on purpose.
+ignore = ["RUF001"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["teams_presence"]
+exclude = ['teams_presence/(app|macos|__main__)\.py$']
+
+[[tool.mypy.overrides]]
+module = ["keyring", "keyring.*"]
+ignore_missing_imports = true
