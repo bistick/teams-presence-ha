@@ -78,9 +78,10 @@ pyinstaller --noconfirm packaging/TeamsPresence.spec
 
 - **macOS**: the bundle is written to `dist/TeamsPresence.app`. Copy it to `/Applications` and open
   it. It runs only in the menu bar, without a Dock icon.
-- **Windows**: the app is written to the `dist\TeamsPresence\` folder. Copy the whole folder
-  (for example to `%LOCALAPPDATA%\Programs\TeamsPresence`) and run `TeamsPresence.exe`. It runs
-  only in the notification area; right-click the icon for the menu.
+- **Windows**: the app is the single file `dist\TeamsPresence.exe`. Copy it anywhere (for example
+  to `%LOCALAPPDATA%\Programs\TeamsPresence`) and run it. It runs only in the notification area;
+  right-click the icon for the menu. It unpacks itself to a temporary folder at each start, so it
+  takes a couple of seconds to appear.
 
 The app icon comes from `packaging/assets/icon.png`; PyInstaller converts it to `.icns` or `.ico`.
 

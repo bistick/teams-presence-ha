@@ -40,7 +40,7 @@ jobs:
       - name: Package (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
-        run: Compress-Archive -Path dist/TeamsPresence -DestinationPath dist/${{ matrix.artifact }}.zip
+        run: Compress-Archive -Path dist/TeamsPresence.exe -DestinationPath dist/${{ matrix.artifact }}.zip
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}

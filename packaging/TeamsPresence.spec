@@ -26,19 +26,20 @@ a = Analysis(
     hiddenimports=hiddenimports,
 )
 pyz = PYZ(a.pure)
-exe = EXE(
-    pyz,
-    a.scripts,
-    [],
-    exclude_binaries=True,
-    name="TeamsPresence",
-    console=False,
-    argv_emulation=False,
-    icon=ICON,
-)
-coll = COLLECT(exe, a.binaries, a.datas, name="TeamsPresence")
 
 if IS_MACOS:
+    # A one-folder build wrapped in the .app bundle.
+    exe = EXE(
+        pyz,
+        a.scripts,
+        [],
+        exclude_binaries=True,
+        name="TeamsPresence",
+        console=False,
+        argv_emulation=False,
+        icon=ICON,
+    )
+    coll = COLLECT(exe, a.binaries, a.datas, name="TeamsPresence")
     app = BUNDLE(
         coll,
         name="TeamsPresence.app",
@@ -54,4 +55,17 @@ if IS_MACOS:
             "LSMinimumSystemVersion": "13.0",
             "NSHumanReadableCopyright": "Lorenzo Denami",
         },
+    )
+else:
+    # One file: TeamsPresence.exe can be moved anywhere on its own. It unpacks itself
+    # to a temporary folder at each start.
+    exe = EXE(
+        pyz,
+        a.scripts,
+        a.binaries,
+        a.datas,
+        [],
+        name="TeamsPresence",
+        console=False,
+        icon=ICON,
     )
