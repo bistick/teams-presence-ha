@@ -88,6 +88,19 @@ The app icon comes from `packaging/assets/icon.png`; PyInstaller converts it to 
 The GitHub Actions workflow in `.github/workflows/build.yml` runs the tests and builds both apps on
 every push, and uploads them as the `TeamsPresence-macos` and `TeamsPresence-windows` artifacts.
 
+### Release
+
+Pushing a `v*` tag publishes a GitHub release with both apps attached, built by the workflow. The
+tag must match `version` in `pyproject.toml`, otherwise the release fails. The text at the top of
+the release comes from `packaging/release-notes.md`, followed by notes generated from the commits.
+
+```sh
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+For a new version, update `version` in `pyproject.toml` and commit it before tagging.
+
 ## Configuration
 
 Everything is configured from the app menu, under **Impostazioni** (Settings):
