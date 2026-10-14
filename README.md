@@ -82,6 +82,8 @@ pyinstaller --noconfirm packaging/TeamsPresence.spec
   (for example to `%LOCALAPPDATA%\Programs\TeamsPresence`) and run `TeamsPresence.exe`. It runs
   only in the notification area; right-click the icon for the menu.
 
+The app icon comes from `packaging/assets/icon.png`; PyInstaller converts it to `.icns` or `.ico`.
+
 The GitHub Actions workflow in `.github/workflows/build.yml` runs the tests and builds both apps on
 every push, and uploads them as the `TeamsPresence-macos` and `TeamsPresence-windows` artifacts.
 

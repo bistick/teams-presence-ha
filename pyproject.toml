@@ -23,6 +23,8 @@ dev = [
 # Builds TeamsPresence.app (macOS) or TeamsPresence.exe (Windows) from packaging/TeamsPresence.spec.
 app = [
     "pyinstaller>=6.22,<7",
+    # Converts packaging/assets/icon.png to the platform icon format.
+    "pillow>=11",
 ]
 
 [project.scripts]

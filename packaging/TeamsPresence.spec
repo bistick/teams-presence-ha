@@ -9,6 +9,8 @@ from PyInstaller.utils.hooks import copy_metadata
 
 VERSION = version("teams-presence")
 IS_MACOS = sys.platform == "darwin"
+# PyInstaller converts the PNG to .icns or .ico itself, through Pillow.
+ICON = os.path.join(SPECPATH, "assets", "icon.png")
 
 if IS_MACOS:
     hiddenimports = ["keyring.backends.macOS"]
@@ -32,6 +34,7 @@ exe = EXE(
     name="TeamsPresence",
     console=False,
     argv_emulation=False,
+    icon=ICON,
 )
 coll = COLLECT(exe, a.binaries, a.datas, name="TeamsPresence")
 
@@ -39,6 +42,7 @@ if IS_MACOS:
     app = BUNDLE(
         coll,
         name="TeamsPresence.app",
+        icon=ICON,
         bundle_identifier="it.denami.teams-presence",
         version=VERSION,
         info_plist={
