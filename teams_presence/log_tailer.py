@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import sys
 from collections.abc import Callable
 from enum import Enum
 from fnmatch import fnmatch
@@ -11,15 +12,34 @@ from typing import BinaryIO
 
 LOG_PATTERN = "MSTeams_*.log"
 CHUNK_SIZE = 256 * 1024
-DEFAULT_LOG_DIR = (
-    Path.home()
-    / "Library"
-    / "Group Containers"
-    / "UBF8T346G9.com.microsoft.teams"
-    / "Library"
-    / "Application Support"
-    / "Logs"
-)
+
+
+def default_log_dir() -> Path:
+    """Where the new Teams client writes its ``MSTeams_*.log`` files."""
+    if sys.platform == "win32":
+        local = os.environ.get("LOCALAPPDATA")
+        base = Path(local) if local else Path.home() / "AppData" / "Local"
+        return (
+            base
+            / "Packages"
+            / "MSTeams_8wekyb3d8bbwe"
+            / "LocalCache"
+            / "Microsoft"
+            / "MSTeams"
+            / "Logs"
+        )
+    return (
+        Path.home()
+        / "Library"
+        / "Group Containers"
+        / "UBF8T346G9.com.microsoft.teams"
+        / "Library"
+        / "Application Support"
+        / "Logs"
+    )
+
+
+DEFAULT_LOG_DIR = default_log_dir()
 
 
 class TailerStatus(Enum):

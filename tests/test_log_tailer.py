@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 
 import pytest
@@ -86,6 +87,7 @@ def test_missing_directory(tmp_path: Path) -> None:
     assert tailer.initial_backscan(parse_line) is None
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="chmod cannot deny reads on Windows")
 def test_permission_denied(tmp_path: Path) -> None:
     locked = tmp_path / "locked"
     locked.mkdir()

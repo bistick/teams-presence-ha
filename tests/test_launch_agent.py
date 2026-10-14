@@ -19,8 +19,8 @@ def test_render_plist() -> None:
         "KeepAlive": {"SuccessfulExit": False},
         "LimitLoadToSessionType": "Aqua",
         "ProcessType": "Interactive",
-        "StandardOutPath": "/logs/launchd.out.log",
-        "StandardErrorPath": "/logs/launchd.err.log",
+        "StandardOutPath": str(Path("/logs") / "launchd.out.log"),
+        "StandardErrorPath": str(Path("/logs") / "launchd.err.log"),
     }
 
 

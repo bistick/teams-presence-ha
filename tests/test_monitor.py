@@ -7,11 +7,14 @@ from teams_presence.log_tailer import TailerStatus
 from teams_presence.monitor import STALE_AFTER_SECONDS, PresenceMonitor, SourceStatus
 from teams_presence.presence import Presence
 
+# Well past the epoch: Windows cannot convert timestamps near 0 to local time.
+T0 = 1_700_000_000.0
+
 
 class FakeTailer:
     def __init__(self, backscan_event: PresenceEvent | None = None) -> None:
         self.status = TailerStatus.OK
-        self.last_modified: float | None = 1000.0
+        self.last_modified: float | None = T0
         self.lines: list[str] = []
         self._backscan_event = backscan_event
 
@@ -26,7 +29,7 @@ class FakeTailer:
 
 
 class Clock:
-    def __init__(self, now: float = 1000.0) -> None:
+    def __init__(self, now: float = T0) -> None:
         self.now = now
 
     def __call__(self) -> float:
@@ -82,7 +85,7 @@ def test_teams_not_running_is_offline() -> None:
     assert state.raw is None
     assert state.source is SourceStatus.TEAMS_NOT_RUNNING
     assert state.changed
-    assert state.since.timestamp() == 1000.0
+    assert state.since.timestamp() == T0
 
 
 def test_stale_log_is_unknown_then_recovers() -> None:
@@ -90,7 +93,7 @@ def test_stale_log_is_unknown_then_recovers() -> None:
     tailer = FakeTailer(event(user_action("Busy")))
     monitor = PresenceMonitor(tailer, lambda: True, clock)
     monitor.tick()
-    clock.now = 1000.0 + STALE_AFTER_SECONDS
+    clock.now = T0 + STALE_AFTER_SECONDS
     assert monitor.tick().presence is Presence.BUSY
     clock.now += 1
     stale = monitor.tick()
@@ -108,7 +111,7 @@ def test_wake_from_sleep_is_not_stale_until_silent_while_awake() -> None:
     tailer = FakeTailer(event(user_action("Busy")))
     monitor = PresenceMonitor(tailer, lambda: True, clock)
     monitor.tick()
-    clock.now = 1000.0 + 3600  # one hour asleep; Teams wrote nothing meanwhile
+    clock.now = T0 + 3600  # one hour asleep; Teams wrote nothing meanwhile
     monitor.note_wake()
     after_wake = monitor.tick()
     assert after_wake.presence is Presence.BUSY

@@ -1,10 +1,14 @@
-"""Persistent settings: a JSON file for plain values, the macOS Keychain for the token."""
+"""Persistent settings: a JSON file for plain values, the OS credential store for the token.
+
+The token lives in the macOS Keychain or in the Windows Credential Manager, through keyring.
+"""
 
 from __future__ import annotations
 
 import json
 import os
 import re
+import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -20,11 +24,20 @@ _ENTITY_ID = re.compile(r"^sensor\.[a-z0-9_]+$")
 _TOKEN = re.compile(r"[A-Za-z0-9._-]+")
 
 
+def _windows_dir(variable: str, fallback: str) -> Path:
+    value = os.environ.get(variable)
+    return Path(value) if value else Path.home() / "AppData" / fallback
+
+
 def app_support_dir() -> Path:
+    if sys.platform == "win32":
+        return _windows_dir("APPDATA", "Roaming") / APP_NAME
     return Path.home() / "Library" / "Application Support" / APP_NAME
 
 
 def logs_dir() -> Path:
+    if sys.platform == "win32":
+        return _windows_dir("LOCALAPPDATA", "Local") / APP_NAME / "Logs"
     return Path.home() / "Library" / "Logs" / APP_NAME
 
 

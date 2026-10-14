@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import fcntl
+import sys
 from pathlib import Path
 from typing import TextIO
 
@@ -16,8 +16,23 @@ def acquire_lock(path: Path) -> TextIO:
     path.parent.mkdir(parents=True, exist_ok=True)
     handle = path.open("a", encoding="utf-8")
     try:
-        fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except BlockingIOError as exc:
+        _lock(handle)
+    except OSError as exc:
         handle.close()
         raise AlreadyRunningError(str(path)) from exc
     return handle
+
+
+if sys.platform == "win32":
+    import msvcrt
+
+    def _lock(handle: TextIO) -> None:
+        # Byte-range lock on the first byte; it may lie past the end of the empty file.
+        handle.seek(0)
+        msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+
+else:
+    import fcntl
+
+    def _lock(handle: TextIO) -> None:
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)

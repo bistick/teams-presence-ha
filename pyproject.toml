@@ -5,11 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "teams-presence"
 version = "0.1.0"
-description = "Publish Microsoft Teams presence, read from local logs, to Home Assistant from the macOS menu bar."
+description = "Publish Microsoft Teams presence, read from local logs, to Home Assistant from the macOS menu bar or the Windows notification area."
 requires-python = ">=3.12"
 dependencies = [
-    "rumps>=0.4.0,<0.5",
     "keyring>=25,<26",
+    "rumps>=0.4.0,<0.5; sys_platform == 'darwin'",
+    "pystray>=0.19.5,<0.20; sys_platform == 'win32'",
+    "pillow>=11; sys_platform == 'win32'",
 ]
 
 [project.optional-dependencies]
@@ -18,7 +20,7 @@ dev = [
     "ruff>=0.6",
     "mypy>=1.11",
 ]
-# Builds TeamsPresence.app from packaging/TeamsPresence.spec.
+# Builds TeamsPresence.app (macOS) or TeamsPresence.exe (Windows) from packaging/TeamsPresence.spec.
 app = [
     "pyinstaller>=6.22,<7",
 ]
@@ -47,7 +49,7 @@ ignore = ["RUF001"]
 python_version = "3.12"
 strict = true
 files = ["teams_presence"]
-exclude = ['teams_presence/(app|macos|__main__)\.py$']
+exclude = ['teams_presence/(app|app_windows|macos|__main__)\.py$']
 
 [[tool.mypy.overrides]]
 module = ["keyring", "keyring.*"]
