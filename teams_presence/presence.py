@@ -1,4 +1,7 @@
-"""Presence values reported by Microsoft Teams and how they are presented."""
+"""Presence values reported by Microsoft Teams and how they are presented.
+
+``IN_CALL`` is not a Teams availability: the monitor derives it from call windows.
+"""
 
 from __future__ import annotations
 
@@ -8,6 +11,7 @@ from enum import Enum
 class Presence(Enum):
     AVAILABLE = "available"
     BUSY = "busy"
+    IN_CALL = "in_call"
     DO_NOT_DISTURB = "do_not_disturb"
     BE_RIGHT_BACK = "be_right_back"
     AWAY = "away"
@@ -46,6 +50,7 @@ _TEAMS_VALUES = {
 _EMOJI = {
     Presence.AVAILABLE: "🟢",
     Presence.BUSY: "🔴",
+    Presence.IN_CALL: "📞",
     Presence.DO_NOT_DISTURB: "⛔",
     Presence.BE_RIGHT_BACK: "🟡",
     Presence.AWAY: "🟡",
@@ -56,6 +61,7 @@ _EMOJI = {
 _LABEL = {
     Presence.AVAILABLE: "Disponibile",
     Presence.BUSY: "Occupato",
+    Presence.IN_CALL: "In chiamata",
     Presence.DO_NOT_DISTURB: "Non disturbare",
     Presence.BE_RIGHT_BACK: "Torno subito",
     Presence.AWAY: "Assente",

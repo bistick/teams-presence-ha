@@ -14,6 +14,7 @@ from teams_presence.presence import HA_OPTIONS, Presence
         ("Offline", Presence.OFFLINE),
         (" busy ", Presence.BUSY),
         ("Presenting", Presence.UNKNOWN),
+        ("InCall", Presence.UNKNOWN),
         ("", Presence.UNKNOWN),
     ],
 )
@@ -25,6 +26,7 @@ def test_ha_options_are_snake_case_in_order() -> None:
     assert HA_OPTIONS == (
         "available",
         "busy",
+        "in_call",
         "do_not_disturb",
         "be_right_back",
         "away",

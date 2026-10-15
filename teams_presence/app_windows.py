@@ -37,6 +37,7 @@ _PBT_APMRESUMEAUTOMATIC = 0x0012
 _COLORS = {
     Presence.AVAILABLE: "#6BB700",
     Presence.BUSY: "#C4314B",
+    Presence.IN_CALL: "#C4314B",
     Presence.DO_NOT_DISTURB: "#C4314B",
     Presence.BE_RIGHT_BACK: "#FFAA44",
     Presence.AWAY: "#FFAA44",
@@ -58,6 +59,8 @@ def presence_image(presence: Presence, size: int = 64) -> Image.Image:
     if presence is Presence.DO_NOT_DISTURB:
         bar = size * 0.08
         draw.rectangle((size * 0.26, size / 2 - bar, size * 0.74, size / 2 + bar), fill="white")
+    if presence is Presence.IN_CALL:
+        draw.ellipse((size * 0.34, size * 0.34, size * 0.66, size * 0.66), fill="white")
     return image
 
 

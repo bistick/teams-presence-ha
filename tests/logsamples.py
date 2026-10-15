@@ -39,3 +39,29 @@ def noise(ts: str = TS) -> str:
         f"{ts} {_THREAD} <INFO> auth::AuthenticationService::AcquireToken: Start | "
         f"resource: https://presence.teams.microsoft.com/, silent: true"
     )
+
+
+CALL_WINDOW = "0b6d2f4e-1c3a-4f5e-9a7b-2c8d1e0f3a4b"
+
+
+def _window(window: str, tags: str = "") -> str:
+    return f"Window: (windowNumber=6349; name={window}; tags={tags})"
+
+
+def call_start(window: str = CALL_WINDOW, ts: str = TS) -> str:
+    return f"{ts} {_THREAD} <INFO> {_window(window)} Setting close prompt from web: meeting"
+
+
+def call_end(window: str = CALL_WINDOW, ts: str = TS) -> str:
+    return f"{ts} {_THREAD} <INFO> {_window(window)} Resetting close prompt from web"
+
+
+def window_destroyed(window: str = CALL_WINDOW, ts: str = TS) -> str:
+    return (
+        f"{ts} {_THREAD} <INFO> {_window(window)} WindowCloseActionDestroy, "
+        f"letting the window destroy"
+    )
+
+
+def close_prompt(value: str, window: str = CALL_WINDOW, ts: str = TS) -> str:
+    return f"{ts} {_THREAD} <INFO> {_window(window)} Setting close prompt from web: {value}"

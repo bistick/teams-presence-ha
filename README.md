@@ -16,6 +16,8 @@ your Home Assistant.
   (`POST /api/states/<entity_id>`).
 - A change is sent immediately. The state is re-sent every 5 minutes as a heartbeat. Failed sends
   are retried with backoff.
+- During a call or meeting the presence is `in_call`. Teams itself keeps reporting `Busy`; the app
+  detects the call from the call window, which Teams logs when it opens and closes.
 - If Teams is not running, the presence is `offline`. If the log has not been written for more than
   12 minutes, the presence is `unknown`. Sleep time does not count towards the 12 minutes.
 - When the app quits, or the user logs out or the computer shuts down, the app makes one last
@@ -27,6 +29,7 @@ your Home Assistant.
 |------------------|-----------------|----------|
 | `available`      | Available       | 🟢       |
 | `busy`           | Busy            | 🔴       |
+| `in_call`        | In a call       | 📞       |
 | `do_not_disturb` | Do not disturb  | ⛔       |
 | `be_right_back`  | Be right back   | 🟡       |
 | `away`           | Away            | 🟡       |
@@ -158,4 +161,6 @@ mypy
 
 - The presence is parsed from Teams' internal log format. A Teams update can change that format
   without notice and stop the detection.
+- A call that was already in progress when Teams started a new log file is not detected if the app
+  starts after that; calls that start while the app runs are always tracked.
 - Only the new Teams client is supported, on macOS and Windows. Teams classic is not.
